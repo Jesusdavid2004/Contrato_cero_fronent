@@ -9,6 +9,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    },
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": false,
@@ -16,5 +20,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vite/client"]
   },
-  "include": ["src"]
+  "include": ["src", "app", "next-lib", "next.config.ts", "next-env.d.ts"]
 }
