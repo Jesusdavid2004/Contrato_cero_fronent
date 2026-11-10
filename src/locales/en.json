@@ -143,6 +143,7 @@
   "errors.fact_transition_invalid": "That fact cannot be updated that way.",
   "errors.clause_not_found": "That clause does not exist in this contract.",
   "errors.proposal_not_editable": "That proposal can no longer be changed.",
+  "errors.out_of_coverage": "This contract type is outside our current coverage. We cannot analyze it without inventing local conclusions.",
   "errors.clipboard_unavailable": "Clipboard access is unavailable. Select and copy the letter text instead.",
   "errors.unauthorized": "Please sign in again to continue.",
   "errors.api_error": "The request could not be completed."

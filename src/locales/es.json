@@ -143,6 +143,7 @@
   "errors.fact_transition_invalid": "Ese dato no se puede actualizar así.",
   "errors.clause_not_found": "Esa cláusula no existe en este contrato.",
   "errors.proposal_not_editable": "Esa propuesta ya no se puede cambiar.",
+  "errors.out_of_coverage": "Este tipo de contrato está fuera de nuestra cobertura actual. No podemos analizarlo sin inventar conclusiones locales.",
   "errors.clipboard_unavailable": "No se puede acceder al portapapeles. Selecciona y copia el texto de la carta.",
   "errors.unauthorized": "Inicia sesión de nuevo para continuar.",
   "errors.api_error": "No se pudo completar la solicitud."
