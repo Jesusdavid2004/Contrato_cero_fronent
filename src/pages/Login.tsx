@@ -33,8 +33,8 @@ export function Login() {
       className="floating-panel"
     >
       <div className="flex flex-col items-center gap-1.5 text-center">
-        <span className="mb-2 flex h-12 w-12 items-center justify-center rounded-[17px] bg-[var(--color-action-soft)]">
-          <ShieldCheck className="h-6 w-6 text-[var(--color-action-text)]" />
+        <span className="mb-2 flex h-12 w-12 items-center justify-center rounded-[17px] bg-gradient-to-br from-[var(--color-action)] to-[var(--color-accent)] shadow-sm">
+          <ShieldCheck className="h-6 w-6 text-white" />
         </span>
         <h1 className="text-[24px] font-bold tracking-tight">{t('auth.login_title', 'Welcome back')}</h1>
         <p className="text-[14px] text-[var(--color-text-muted)]">

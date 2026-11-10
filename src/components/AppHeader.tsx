@@ -24,7 +24,7 @@ export function AppHeader() {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-[var(--color-border)] bg-[var(--color-surface)]">
+    <header className="glass sticky top-0 z-40 w-full">
       <div className="flex items-center justify-between gap-3 px-4 py-3.5 sm:px-6 lg:px-10">
         <h1 className="truncate text-[17px] font-bold tracking-tight">{t(titleKey(location.pathname))}</h1>
         <div className="flex items-center gap-1.5">

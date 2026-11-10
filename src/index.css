@@ -55,6 +55,9 @@
     --color-risk-low-text: #067647;
     --color-risk-low-dot: #039855;
 
+    --color-accent: #7c3aed;
+    --color-accent-soft: #f0e9fd;
+
     --shadow-floating: 0 1px 2px rgba(0, 0, 0, 0.05), 0 8px 24px -8px rgba(0, 0, 0, 0.08);
     --shadow-popover: 0 2px 4px rgba(0, 0, 0, 0.05), 0 16px 40px -12px rgba(0, 0, 0, 0.16);
     --radius-panel: 22px;
@@ -92,6 +95,9 @@
     --color-risk-low-text: #6ce9a6;
     --color-risk-low-dot: #6ce9a6;
 
+    --color-accent: #a78bfa;
+    --color-accent-soft: rgba(124, 58, 237, 0.16);
+
     --shadow-floating: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -12px rgba(0, 0, 0, 0.5);
     --shadow-popover: 0 2px 6px rgba(0, 0, 0, 0.45), 0 24px 56px -16px rgba(0, 0, 0, 0.6);
   }
@@ -108,6 +114,35 @@ body {
   font-family: 'Inter', -apple-system, 'SF Pro Text', system-ui, sans-serif;
   transition: background-color 0.25s ease, color 0.25s ease;
   min-height: 100vh;
+}
+
+/* Ambient glow: decorative only, never interactive */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(560px 320px at 12% -4%, var(--color-action-soft), transparent 70%),
+    radial-gradient(640px 360px at 88% 6%, var(--color-accent-soft), transparent 70%);
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+::selection {
+  background: var(--color-action-soft);
+}
+
+/* Gradient display text (large headings only, keeps body text solid) */
+.text-gradient {
+  background: linear-gradient(100deg, var(--color-action-text), var(--color-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Floating surfaces */
