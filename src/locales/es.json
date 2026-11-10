@@ -144,6 +144,11 @@
   "errors.clause_not_found": "Esa cláusula no existe en este contrato.",
   "errors.proposal_not_editable": "Esa propuesta ya no se puede cambiar.",
   "errors.out_of_coverage": "Este tipo de contrato está fuera de nuestra cobertura actual. No podemos analizarlo sin inventar conclusiones locales.",
+  "errors.reminder_not_found": "Ese recordatorio no existe.",
+  "errors.reminder_invalid_date": "El recordatorio necesita una fecha futura sin ambigüedad y con zona horaria.",
+  "errors.review_not_found": "No hay solicitud de revisión para este contrato.",
+  "errors.review_already_open": "Ya hay una solicitud de revisión abierta.",
+  "errors.review_transition_invalid": "Esa revisión no puede pasar al estado pedido.",
   "errors.clipboard_unavailable": "No se puede acceder al portapapeles. Selecciona y copia el texto de la carta.",
   "errors.unauthorized": "Inicia sesión de nuevo para continuar.",
   "errors.api_error": "No se pudo completar la solicitud."

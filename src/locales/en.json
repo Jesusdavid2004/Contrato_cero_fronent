@@ -144,6 +144,11 @@
   "errors.clause_not_found": "That clause does not exist in this contract.",
   "errors.proposal_not_editable": "That proposal can no longer be changed.",
   "errors.out_of_coverage": "This contract type is outside our current coverage. We cannot analyze it without inventing local conclusions.",
+  "errors.reminder_not_found": "That reminder does not exist.",
+  "errors.reminder_invalid_date": "The reminder needs an unambiguous future date with timezone.",
+  "errors.review_not_found": "There is no review request for this contract.",
+  "errors.review_already_open": "There is already an open review request.",
+  "errors.review_transition_invalid": "That review cannot move to the requested state.",
   "errors.clipboard_unavailable": "Clipboard access is unavailable. Select and copy the letter text instead.",
   "errors.unauthorized": "Please sign in again to continue.",
   "errors.api_error": "The request could not be completed."
