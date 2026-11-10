@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import type { ReactNode } from 'react';
-import '../src/index.css';
+import '../../src/index.css';
 import { parseLocale } from '../next-lib/dictionary';
 
 export const metadata: Metadata = {

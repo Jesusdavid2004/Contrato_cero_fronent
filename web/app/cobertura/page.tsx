@@ -1,4 +1,4 @@
-import coverage from '../../src/data/legal-coverage.json';
+import coverage from '../../../src/data/legal-coverage.json';
 
 /** ISR: contenido publico aprobado que se revalida cada intervalo. */
 export const revalidate = 3600;

@@ -2,13 +2,13 @@
 
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
-import '../../src/i18n';
-import { FileDropzone } from '../../src/components/FileDropzone';
+import '../../../src/i18n';
+import { FileDropzone } from '../../../src/components/FileDropzone';
 import {
   ContractApiError,
   uploadAndAnalyzeContract,
   type ContractAnalysisResult,
-} from '../../src/services/contracts';
+} from '../../../src/services/contracts';
 
 const ResultsViewer = dynamic(() => import('./results-view').then((module) => module.ResultsView), {
   loading: () => <p>Cargando visor de resultados…</p>,

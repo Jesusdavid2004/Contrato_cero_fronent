@@ -19,5 +19,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": ["vite/client", "node"]
   },
-  "include": ["src", "app", "next-lib", "next.config.ts", "next-env.d.ts"]
+  "include": ["src", "web/next-lib"]
 }

@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { z } from 'zod';
-import { RealtimeUnavailableError, watchContractProgress } from '../../../src/services/realtime';
+import { RealtimeUnavailableError, watchContractProgress } from '../../../../src/services/realtime';
 
 const bffTicketSchema = z.object({
   ticket: z.string().min(1),

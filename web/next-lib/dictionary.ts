@@ -1,5 +1,5 @@
-import es from '../src/locales/es.json';
-import en from '../src/locales/en.json';
+import es from '../../src/locales/es.json';
+import en from '../../src/locales/en.json';
 
 export type UILocale = 'es' | 'en';
 
