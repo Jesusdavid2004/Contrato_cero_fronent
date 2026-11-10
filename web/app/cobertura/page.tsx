@@ -1,6 +1,7 @@
 import coverage from '../../../src/data/legal-coverage.json';
 
-/** ISR: contenido publico aprobado que se revalida cada intervalo. */
+/** ISR: contenido publico aprobado que se prerenderiza y revalida. */
+export const dynamic = 'force-static';
 export const revalidate = 3600;
 
 interface CoverageFile {
