@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { RealtimeUnavailableError, watchContractProgress } from './realtime';
 
 const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, '') ?? '';
 const STATUS_POLL_INTERVALS_MS = [500, 1000, 2000, 4000, 8000];
@@ -173,6 +174,41 @@ function wait(milliseconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
+interface TerminalAnalysisState {
+  status: string;
+  failureMessageKey: string | null;
+}
+
+/**
+ * Consulta HTTP acotada del estado: solo se usa cuando el socket falla
+ * (mismo backoff, mismo maximo de 10 min, se detiene en estado terminal).
+ */
+async function pollStatusUntilTerminal(
+  contractId: string,
+  token: string,
+  onStage?: (stage: string) => void,
+): Promise<TerminalAnalysisState> {
+  const deadline = Date.now() + ANALYSIS_TIMEOUT_MS;
+  let attempt = 0;
+  while (Date.now() < deadline) {
+    const delay = STATUS_POLL_INTERVALS_MS[Math.min(attempt, STATUS_POLL_INTERVALS_MS.length - 1)];
+    await wait(delay);
+    attempt += 1;
+    const status = parseStatus(await requestJson(
+      `${API_URL}/api/contracts/${encodeURIComponent(contractId)}/status`,
+      token,
+    ));
+    onStage?.(status.status);
+    if (status.status === 'FAILED') {
+      return { status: 'FAILED', failureMessageKey: status.failure_message_key };
+    }
+    if (status.status === 'READY') {
+      return { status: 'READY', failureMessageKey: null };
+    }
+  }
+  throw new ContractApiError('errors.analysis_timeout');
+}
+
 export async function uploadAndAnalyzeContract(
   file: File,
   locale: string,
@@ -194,30 +230,28 @@ export async function uploadAndAnalyzeContract(
   }
   const contractId = upload.data.id;
 
-  const deadline = Date.now() + ANALYSIS_TIMEOUT_MS;
-  let attempt = 0;
   onStage?.('UPLOADED');
-  while (Date.now() < deadline) {
-    const delay = STATUS_POLL_INTERVALS_MS[Math.min(attempt, STATUS_POLL_INTERVALS_MS.length - 1)];
-    await wait(delay);
-    attempt += 1;
-    const status = parseStatus(await requestJson(
-      `${API_URL}/api/contracts/${encodeURIComponent(contractId)}/status`,
+  let terminal: TerminalAnalysisState;
+  try {
+    const viaSocket = await watchContractProgress({
+      apiUrl: API_URL,
       token,
-    ));
-    onStage?.(status.status);
-    if (status.status === 'FAILED') {
-      throw new ContractApiError(status.failure_message_key || 'errors.analysis_failed');
-    }
-    if (status.status === 'READY') {
-      const contract = parseContract(await requestJson(
-        `${API_URL}/api/contracts/${encodeURIComponent(contractId)}`,
-        token,
-      ));
-      return toResultsViewModel(contract);
-    }
+      contractId,
+      onStage,
+    });
+    terminal = { status: viaSocket.status, failureMessageKey: viaSocket.failureMessageKey };
+  } catch (error) {
+    if (!(error instanceof RealtimeUnavailableError)) throw error;
+    terminal = await pollStatusUntilTerminal(contractId, token, onStage);
   }
-  throw new ContractApiError('errors.analysis_timeout');
+  if (terminal.status === 'FAILED') {
+    throw new ContractApiError(terminal.failureMessageKey || 'errors.analysis_failed');
+  }
+  const contract = parseContract(await requestJson(
+    `${API_URL}/api/contracts/${encodeURIComponent(contractId)}`,
+    token,
+  ));
+  return toResultsViewModel(contract);
 }
 
 export function parseObjectionLetter(value: unknown): ObjectionLetterResponse {
