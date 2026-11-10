@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { cookies } from 'next/headers';
-import { parseLocale } from '../../../next-lib/dictionary';
+import { parseLocale } from '../../next-lib/dictionary';
 
 export const dynamic = 'force-static';
 
