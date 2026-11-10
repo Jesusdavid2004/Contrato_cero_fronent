@@ -10,6 +10,7 @@ Repo `Contrato_cero_fronent`. Solo hechos verificados.
 | Compatibilidad ES/EN, tema, rutas | Sin cambios | — | `i18n:check` 143 claves OK |
 | Mensaje `errors.staging_expired` ES/EN | Hecho | `01dd4d0` | Paridad 143 claves |
 | Mensajes fase 6 (datos, cláusula, propuesta) ES/EN | Hecho | `1d2abb6` | Paridad 147 claves |
+| Mensaje fuera de cobertura ES/EN | Hecho | `ed7ebb6` | Paridad 148 claves |
 
 ## Fase 4 — Next.js App Router en `web/` (raíz propia)
 
