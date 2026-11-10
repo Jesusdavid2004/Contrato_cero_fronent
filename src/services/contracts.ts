@@ -1,7 +1,9 @@
 import { z } from 'zod';
 import { RealtimeUnavailableError, watchContractProgress } from './realtime';
 
-const API_URL = import.meta.env.VITE_API_URL?.replace(/\/$/, '') ?? '';
+const API_URL = (
+  import.meta.env?.VITE_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? ''
+).replace(/\/$/, '');
 const STATUS_POLL_INTERVALS_MS = [500, 1000, 2000, 4000, 8000];
 const ANALYSIS_TIMEOUT_MS = 10 * 60 * 1000;
 
