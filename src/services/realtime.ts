@@ -57,6 +57,11 @@ export interface WatchProgressOptions {
   maxWaitMs?: number;
   maxReconnects?: number;
   socketForTests?: typeof WebSocket;
+  /**
+   * Proveedor alternativo de tickets (p. ej. BFF same-origin que canjea la
+   * cookie httpOnly). Si falla, tambien cede al fallback HTTP.
+   */
+  getTicket?: () => Promise<string>;
 }
 
 const DEFAULT_MAX_WAIT_MS = 10 * 60 * 1000;
@@ -245,9 +250,13 @@ export function watchContractProgress(options: WatchProgressOptions): Promise<Co
       if (settled) return;
       let ticket: string;
       try {
-        ticket = await requestTicket(options.apiUrl, options.token);
+        ticket = options.getTicket
+          ? await options.getTicket()
+          : await requestTicket(options.apiUrl, options.token);
       } catch (error) {
-        failover(error instanceof Error ? error : new RealtimeUnavailableError());
+        failover(error instanceof RealtimeUnavailableError
+          ? error
+          : new RealtimeUnavailableError('ticket failed'));
         return;
       }
       if (settled) return;
