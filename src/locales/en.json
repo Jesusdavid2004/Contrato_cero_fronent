@@ -129,6 +129,7 @@
   "errors.analysis_timeout": "Analysis is taking too long. Please try again.",
   "errors.daily_quota_exceeded": "You have reached your daily analysis limit.",
   "errors.text_extraction_failed": "We could not read the text in this contract.",
+  "errors.staging_expired": "The upload expired before analysis started. Please upload the contract again.",
   "errors.file_too_large": "The file exceeds the 10 MB limit.",
   "errors.file_too_many_pages": "The PDF exceeds the 40-page limit.",
   "errors.unsupported_file_type": "Upload a PDF, PNG, or JPEG file.",

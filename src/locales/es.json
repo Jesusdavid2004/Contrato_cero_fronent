@@ -129,6 +129,7 @@
   "errors.analysis_timeout": "El análisis está tardando demasiado. Inténtalo de nuevo.",
   "errors.daily_quota_exceeded": "Has alcanzado el límite diario de análisis.",
   "errors.text_extraction_failed": "No pudimos leer el texto de este contrato.",
+  "errors.staging_expired": "La carga venció antes de iniciar el análisis. Sube el contrato de nuevo.",
   "errors.file_too_large": "El archivo supera el límite de 10 MB.",
   "errors.file_too_many_pages": "El PDF supera el límite de 40 páginas.",
   "errors.unsupported_file_type": "Sube un archivo PDF, PNG o JPEG.",
