@@ -139,6 +139,10 @@
   "errors.no_flagged_clauses": "No se encontraron cláusulas de riesgo medio o alto para objetar.",
   "errors.objection_letter_not_found": "Genera una carta de objeción antes de descargar el PDF.",
   "errors.objection_letter_invalid": "La carta debe contener texto y tener máximo 350 palabras.",
+  "errors.fact_not_found": "Ese dato no está disponible para este contrato.",
+  "errors.fact_transition_invalid": "Ese dato no se puede actualizar así.",
+  "errors.clause_not_found": "Esa cláusula no existe en este contrato.",
+  "errors.proposal_not_editable": "Esa propuesta ya no se puede cambiar.",
   "errors.clipboard_unavailable": "No se puede acceder al portapapeles. Selecciona y copia el texto de la carta.",
   "errors.unauthorized": "Inicia sesión de nuevo para continuar.",
   "errors.api_error": "No se pudo completar la solicitud."

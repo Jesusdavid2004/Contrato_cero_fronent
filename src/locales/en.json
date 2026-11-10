@@ -139,6 +139,10 @@
   "errors.no_flagged_clauses": "No medium- or high-risk clauses were found for an objection letter.",
   "errors.objection_letter_not_found": "Generate an objection letter before downloading its PDF.",
   "errors.objection_letter_invalid": "The letter must contain text and be no longer than 350 words.",
+  "errors.fact_not_found": "That fact is not available for this contract.",
+  "errors.fact_transition_invalid": "That fact cannot be updated that way.",
+  "errors.clause_not_found": "That clause does not exist in this contract.",
+  "errors.proposal_not_editable": "That proposal can no longer be changed.",
   "errors.clipboard_unavailable": "Clipboard access is unavailable. Select and copy the letter text instead.",
   "errors.unauthorized": "Please sign in again to continue.",
   "errors.api_error": "The request could not be completed."
