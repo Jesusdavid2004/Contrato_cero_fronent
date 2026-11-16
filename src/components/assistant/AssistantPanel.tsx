@@ -71,18 +71,45 @@ function Bubble({
   );
 }
 
-export function AssistantPanel({ contractId, token }: { contractId: string; token: string | null }) {
+export interface ClauseQuestionRequest {
+  clauseId: string;
+  /** 1-based position shown to the user, e.g. "clause 3". */
+  position: number;
+  /** Changes on every click so asking about the same clause twice still triggers. */
+  nonce: number;
+}
+
+export function AssistantPanel({
+  contractId,
+  token,
+  clauseQuestion,
+}: {
+  contractId: string;
+  token: string | null;
+  /** A pending "ask about this clause" request coming from the clause list. */
+  clauseQuestion?: ClauseQuestionRequest | null;
+}) {
   const { t } = useTranslation();
   const chat = useAssistantChat(contractId, token);
   const speaker = useSpeaker();
   const dictation = useSpeechInput();
   const [question, setQuestion] = useState('');
   const endRef = useRef<HTMLDivElement | null>(null);
+  const panelRef = useRef<HTMLElement | null>(null);
+  const handledNonce = useRef<number | null>(null);
   const busy = chat.status === 'streaming';
 
   useEffect(() => {
     endRef.current?.scrollIntoView?.({ block: 'nearest' });
   }, [chat.messages.length, chat.draft]);
+
+  const { send, status } = chat;
+  useEffect(() => {
+    if (!clauseQuestion || status !== 'idle' || handledNonce.current === clauseQuestion.nonce) return;
+    handledNonce.current = clauseQuestion.nonce;
+    panelRef.current?.scrollIntoView?.({ block: 'start' });
+    void send(t('assistant.ask_about_clause', { position: clauseQuestion.position }), clauseQuestion.clauseId);
+  }, [clauseQuestion, status, send, t]);
 
   const submit = async (value: string) => {
     const trimmed = value.trim();
@@ -109,7 +136,7 @@ export function AssistantPanel({ contractId, token }: { contractId: string; toke
   };
 
   return (
-    <Panel className="flex flex-col gap-4 p-5! sm:p-6!" aria-labelledby="assistant-heading">
+    <Panel ref={panelRef} className="flex flex-col gap-4 p-5! sm:p-6!" aria-labelledby="assistant-heading">
       <header className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[12px] bg-[var(--color-action-soft)] text-[var(--color-action-text)]">

@@ -102,6 +102,23 @@ describe('AssistantPanel', () => {
     expect(input).toHaveValue('');
   });
 
+  it('asks about a specific clause once, and again when requested again', async () => {
+    vi.mocked(askAssistant).mockResolvedValue(ANSWER);
+    const { rerender } = render(<AssistantPanel contractId="c1" token="tok" clauseQuestion={{ clauseId: 'k7', position: 3, nonce: 1 }} />);
+    await waitFor(() => expect(askAssistant).toHaveBeenCalledTimes(1));
+    expect(askAssistant).toHaveBeenCalledWith(
+      'c1',
+      'Explain clause 3 to me and tell me what I should do about it.',
+      'tok',
+      expect.objectContaining({ clauseId: 'k7' }),
+    );
+    rerender(<AssistantPanel contractId="c1" token="tok" clauseQuestion={{ clauseId: 'k7', position: 3, nonce: 1 }} />);
+    expect(askAssistant).toHaveBeenCalledTimes(1);
+    await screen.findByText(/The rent cannot rise freely/);
+    rerender(<AssistantPanel contractId="c1" token="tok" clauseQuestion={{ clauseId: 'k7', position: 3, nonce: 2 }} />);
+    await waitFor(() => expect(askAssistant).toHaveBeenCalledTimes(2));
+  });
+
   it('clears the conversation', async () => {
     vi.mocked(listAssistantMessages).mockResolvedValue([ANSWER]);
     render(<AssistantPanel contractId="c1" token="tok" />);
