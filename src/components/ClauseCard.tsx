@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
@@ -9,14 +9,37 @@ function riskLevelOf(level: string): RiskLevel {
   return level === 'high' || level === 'medium' ? level : 'low';
 }
 
-export function ClauseCard({ clause, defaultOpen = false }: { clause: ContractClauseResponse; defaultOpen?: boolean }) {
+export const CLAUSE_ANCHOR_PREFIX = 'clause-';
+
+export function ClauseCard({
+  clause,
+  defaultOpen = false,
+  highlighted = false,
+}: {
+  clause: ContractClauseResponse;
+  defaultOpen?: boolean;
+  /** True while the narrator is reading this clause: opens it, rings it and scrolls it into view. */
+  highlighted?: boolean;
+}) {
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const [open, setOpen] = useState(defaultOpen);
   const level = riskLevelOf(clause.risk_level);
+  const articleRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!highlighted) return;
+    setOpen(true);
+    articleRef.current?.scrollIntoView?.({ block: 'center', behavior: shouldReduceMotion ? 'auto' : 'smooth' });
+  }, [highlighted, shouldReduceMotion]);
 
   return (
-    <article className="floating-card p-0!">
+    <article
+      ref={articleRef}
+      id={`${CLAUSE_ANCHOR_PREFIX}${clause.id}`}
+      aria-current={highlighted ? 'true' : undefined}
+      className={`floating-card p-0! transition-shadow ${highlighted ? 'ring-2 ring-[var(--color-action)]' : ''}`}
+    >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
