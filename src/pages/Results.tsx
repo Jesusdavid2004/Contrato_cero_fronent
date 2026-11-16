@@ -15,6 +15,8 @@ import { Button } from '../components/ui/Button';
 import { Panel } from '../components/ui/Panel';
 import { RiskBadge, RiskScore } from '../components/ui/Risk';
 import { ClauseCard } from '../components/ClauseCard';
+import { AssistantPanel, type ClauseQuestionRequest } from '../components/assistant/AssistantPanel';
+import { ContractGuide } from '../components/assistant/ContractGuide';
 
 type PlaceholderField = 'name' | 'recipient' | 'date' | 'reference';
 type PlaceholderValues = Record<PlaceholderField, string>;
@@ -61,6 +63,8 @@ export function Results() {
   const [placeholders, setPlaceholders] = useState<PlaceholderValues>(EMPTY_PLACEHOLDERS);
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [statusKey, setStatusKey] = useState<string | null>(null);
+  const [narratedClauseId, setNarratedClauseId] = useState<string | null>(null);
+  const [clauseQuestion, setClauseQuestion] = useState<ClauseQuestionRequest | null>(null);
   const dataState = (location.state as { contractData?: unknown } | null)?.contractData;
 
   const localizedTokens = PLACEHOLDER_TOKENS[letterLocale];
@@ -216,11 +220,21 @@ export function Results() {
         </Link>
       </p>
 
+      <ContractGuide contractId={data.id} token={token} onActiveClauseChange={setNarratedClauseId} />
+
       <section aria-label={t('results.clauses')} className="grid items-start gap-4 xl:grid-cols-2">
         {data.clauses.map((clause, i) => (
-          <ClauseCard key={clause.id} clause={clause} defaultOpen={i === 0} />
+          <ClauseCard
+            key={clause.id}
+            clause={clause}
+            defaultOpen={i === 0}
+            highlighted={clause.id === narratedClauseId}
+            onAsk={(clauseId) => setClauseQuestion({ clauseId, position: i + 1, nonce: Date.now() })}
+          />
         ))}
       </section>
+
+      <AssistantPanel key={data.id} contractId={data.id} token={token} clauseQuestion={clauseQuestion} />
 
       {flaggedClauses.length > 0 && !letterContent && (
         <div className="flex justify-center pt-1">

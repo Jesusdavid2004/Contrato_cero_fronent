@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Sparkles } from 'lucide-react';
 import { RiskBadge, RiskIcon, type RiskLevel } from './ui/Risk';
 import type { ContractClauseResponse } from '../services/contracts';
 
@@ -9,18 +9,45 @@ function riskLevelOf(level: string): RiskLevel {
   return level === 'high' || level === 'medium' ? level : 'low';
 }
 
-export function ClauseCard({ clause, defaultOpen = false }: { clause: ContractClauseResponse; defaultOpen?: boolean }) {
+export const CLAUSE_ANCHOR_PREFIX = 'clause-';
+
+export function ClauseCard({
+  clause,
+  defaultOpen = false,
+  highlighted = false,
+  onAsk,
+}: {
+  clause: ContractClauseResponse;
+  defaultOpen?: boolean;
+  /** True while the narrator is reading this clause: opens it, rings it and scrolls it into view. */
+  highlighted?: boolean;
+  /** When provided, shows a button that sends the clause to the contract assistant. */
+  onAsk?: (clauseId: string) => void;
+}) {
   const { t, i18n } = useTranslation();
   const shouldReduceMotion = useReducedMotion();
   const [open, setOpen] = useState(defaultOpen);
   const level = riskLevelOf(clause.risk_level);
+  const articleRef = useRef<HTMLElement | null>(null);
+
+  const isOpen = open || highlighted;
+
+  useEffect(() => {
+    if (!highlighted) return;
+    articleRef.current?.scrollIntoView?.({ block: 'center', behavior: shouldReduceMotion ? 'auto' : 'smooth' });
+  }, [highlighted, shouldReduceMotion]);
 
   return (
-    <article className="floating-card p-0!">
+    <article
+      ref={articleRef}
+      id={`${CLAUSE_ANCHOR_PREFIX}${clause.id}`}
+      aria-current={highlighted ? 'true' : undefined}
+      className={`floating-card p-0! transition-shadow ${highlighted ? 'ring-2 ring-[var(--color-action)]' : ''}`}
+    >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
+        aria-expanded={isOpen}
         className="flex w-full items-start gap-3 p-5 text-left"
       >
         <span className="mt-0.5 shrink-0 text-[var(--color-text-muted)]">
@@ -41,12 +68,12 @@ export function ClauseCard({ clause, defaultOpen = false }: { clause: ContractCl
         </span>
         <ChevronDown
           aria-hidden="true"
-          className={`mt-1 h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className={`mt-1 h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
       <AnimatePresence initial={false}>
-        {open && (
+        {isOpen && (
           <motion.div
             initial={shouldReduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
             animate={shouldReduceMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}
@@ -112,6 +139,16 @@ export function ClauseCard({ clause, defaultOpen = false }: { clause: ContractCl
                 <p className="text-[14px] leading-relaxed">
                   <strong>{t('results.suggested_change')}:</strong> {clause.suggested_change}
                 </p>
+              )}
+              {onAsk && (
+                <button
+                  type="button"
+                  onClick={() => onAsk(clause.id)}
+                  className="inline-flex items-center gap-2 rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface-2)] px-3.5 py-2 text-[13px] font-semibold transition-colors hover:border-[var(--color-action)] hover:text-[var(--color-action-text)]"
+                >
+                  <Sparkles aria-hidden="true" className="h-4 w-4" />
+                  {t('assistant.ask_about_clause_button')}
+                </button>
               )}
             </div>
           </motion.div>

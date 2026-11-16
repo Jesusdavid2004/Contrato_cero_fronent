@@ -1,7 +1,12 @@
-import { ReactNode } from 'react';
+import { HTMLAttributes, ReactNode, Ref } from 'react';
 
-export function Panel({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <section className={`floating-panel p-6 sm:p-8 ${className}`}>{children}</section>;
+export function Panel({
+  children,
+  className = '',
+  ref,
+  ...rest
+}: { children: ReactNode; className?: string; ref?: Ref<HTMLElement> } & HTMLAttributes<HTMLElement>) {
+  return <section ref={ref} className={`floating-panel p-6 sm:p-8 ${className}`} {...rest}>{children}</section>;
 }
 
 export function Card({ children, className = '' }: { children: ReactNode; className?: string }) {
