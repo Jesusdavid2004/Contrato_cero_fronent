@@ -16,7 +16,7 @@ export interface AssistantChat {
   status: ChatStatus;
   errorKey: string | null;
   historyFailed: boolean;
-  send: (question: string) => Promise<void>;
+  send: (question: string, clauseId?: string) => Promise<void>;
   clear: () => Promise<void>;
   reloadHistory: () => void;
 }
@@ -72,7 +72,7 @@ export function useAssistantChat(contractId: string, token: string | null): Assi
 
   useEffect(() => () => abortRef.current?.abort(), []);
 
-  const send = useCallback(async (question: string) => {
+  const send = useCallback(async (question: string, clauseId?: string) => {
     const trimmed = question.trim();
     if (!token || !trimmed || status === 'streaming') return;
     setErrorKey(null);
@@ -84,6 +84,7 @@ export function useAssistantChat(contractId: string, token: string | null): Assi
     try {
       const reply = await askAssistant(contractId, trimmed, token, {
         signal: controller.signal,
+        clauseId,
         onToken: (text) => setDraft((current) => current + text),
       });
       setMessages((current) => [...current, reply]);

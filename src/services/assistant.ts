@@ -124,6 +124,8 @@ export async function* parseSseStream(body: ReadableStream<Uint8Array>): AsyncGe
 export interface AskCallbacks {
   onToken: (text: string) => void;
   signal?: AbortSignal;
+  /** Clause the question is about; the backend always includes it in the answer context. */
+  clauseId?: string;
 }
 
 /**
@@ -143,7 +145,7 @@ export async function askAssistant(
       credentials: 'include',
       signal: callbacks.signal,
       headers: { ...authHeaders(token), 'Content-Type': 'application/json', Accept: EVENT_STREAM },
-      body: JSON.stringify({ question }),
+      body: JSON.stringify({ question, ...(callbacks.clauseId ? { clause_id: callbacks.clauseId } : {}) }),
     },
   );
   if (!response.ok) throw new ContractApiError(getErrorKey(await readJson(response)));
