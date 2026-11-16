@@ -148,7 +148,6 @@
   "nav.radar": "Radar legal",
   "assistant.title": "Asistente del contrato",
   "assistant.subtitle": "Pregunta lo que quieras sobre este documento. Las respuestas salen solo de tu análisis y de leyes verificadas.",
-  "assistant.reading": "Leyendo: {{title}}",
   "assistant.disclaimer": "Es información general, no asesoría legal. Verifica las fuentes citadas y considera consultar a un profesional calificado antes de actuar.",
   "assistant.placeholder": "Pregunta por una cláusula, un valor, una fecha…",
   "assistant.input_label": "Tu pregunta sobre este contrato",
@@ -238,5 +237,6 @@
   "radar.filter_all": "Todos los temas",
   "radar.filter_label": "Filtrar por tema",
   "errors.assistant_quota_exceeded": "Alcanzaste el límite diario de mensajes del asistente. Inténtalo mañana.",
-  "errors.legal_source_unavailable": "Una fuente legal no está disponible por ahora."
+  "errors.legal_source_unavailable": "Una fuente legal no está disponible por ahora.",
+  "assistant.dictate": "Dictar tu pregunta"
 }

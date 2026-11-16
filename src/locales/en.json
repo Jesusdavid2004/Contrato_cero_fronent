@@ -148,7 +148,6 @@
   "nav.radar": "Legal radar",
   "assistant.title": "Contract assistant",
   "assistant.subtitle": "Ask anything about this document. Answers come only from your analysis and verified laws.",
-  "assistant.reading": "Reading: {{title}}",
   "assistant.disclaimer": "This is general information, not legal advice. Verify the cited sources and consider consulting a qualified professional before acting.",
   "assistant.placeholder": "Ask about a clause, an amount, a deadline…",
   "assistant.input_label": "Your question about this contract",
@@ -238,5 +237,6 @@
   "radar.filter_all": "All topics",
   "radar.filter_label": "Filter by topic",
   "errors.assistant_quota_exceeded": "You reached the daily limit of assistant messages. Try again tomorrow.",
-  "errors.legal_source_unavailable": "A legal source is temporarily unavailable."
+  "errors.legal_source_unavailable": "A legal source is temporarily unavailable.",
+  "assistant.dictate": "Dictate your question"
 }
