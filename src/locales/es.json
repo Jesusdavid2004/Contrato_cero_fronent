@@ -239,5 +239,7 @@
   "radar.filter_label": "Filtrar por tema",
   "errors.assistant_quota_exceeded": "Alcanzaste el límite diario de mensajes del asistente. Inténtalo mañana.",
   "errors.legal_source_unavailable": "Una fuente legal no está disponible por ahora.",
-  "assistant.dictate": "Dictar tu pregunta"
+  "assistant.dictate": "Dictar tu pregunta",
+  "assistant.ask_about_clause_button": "Preguntar al asistente sobre esta cláusula",
+  "assistant.ask_about_clause": "Explícame la cláusula {{position}} y dime qué debo hacer al respecto."
 }

@@ -239,5 +239,7 @@
   "radar.filter_label": "Filter by topic",
   "errors.assistant_quota_exceeded": "You reached the daily limit of assistant messages. Try again tomorrow.",
   "errors.legal_source_unavailable": "A legal source is temporarily unavailable.",
-  "assistant.dictate": "Dictate your question"
+  "assistant.dictate": "Dictate your question",
+  "assistant.ask_about_clause_button": "Ask the assistant about this clause",
+  "assistant.ask_about_clause": "Explain clause {{position}} to me and tell me what I should do about it."
 }
