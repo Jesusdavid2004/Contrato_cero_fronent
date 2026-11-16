@@ -33,6 +33,24 @@ const SAFE_CLAUSE = {
   suggested_change: null,
 };
 
+const GUIDANCE = {
+  contract_id: 'contract-e2e',
+  locale: 'en',
+  global_risk_score: 50,
+  pending_legal_updates: 1,
+  steps: [{
+    id: 'resolve_high_risk_clause:clause-e2e-risky',
+    kind: 'resolve_high_risk_clause',
+    priority: 1,
+    message_key: 'assistant.plan.resolve_high_risk_clause',
+    params: { position: 1, hasSuggestedChange: 1 },
+    clause_id: 'clause-e2e-risky',
+  }],
+  narration: [
+    { id: 'intro', kind: 'intro', message_key: 'assistant.narration.intro_medium', params: { score: 50, flaggedCount: 1 }, clause_id: null },
+  ],
+};
+
 export interface MockApiOptions {
   flagged?: boolean;
   failFirstUpload?: boolean;
@@ -47,6 +65,7 @@ export interface MockApiState {
   letterWasDownloaded: boolean;
   historyContractWasDeleted: boolean;
   accountWasDeleted: boolean;
+  assistantQuestions: Array<{ question: string; clauseId: string | null }>;
 }
 
 export async function mockContractApi(page: Page, options: MockApiOptions = {}): Promise<MockApiState> {
@@ -58,6 +77,7 @@ export async function mockContractApi(page: Page, options: MockApiOptions = {}):
     letterWasDownloaded: false,
     historyContractWasDeleted: false,
     accountWasDeleted: false,
+    assistantQuestions: [],
   };
 
   await page.route('**/api/**', async (route) => {
@@ -178,6 +198,61 @@ export async function mockContractApi(page: Page, options: MockApiOptions = {}):
         headers: { 'content-disposition': 'attachment; filename="objection-letter.pdf"' },
         body: Buffer.from('%PDF-1.4\n% e2e generated pdf\n%%EOF'),
       });
+    }
+    if (path === '/api/contracts/contract-e2e/guidance' && method === 'GET') {
+      return json(GUIDANCE);
+    }
+    if (path === '/api/contracts/contract-e2e/assistant/messages' && method === 'GET') {
+      return json([]);
+    }
+    if (path === '/api/contracts/contract-e2e/assistant/messages' && method === 'POST') {
+      const payload = request.postDataJSON() as { question: string; clause_id?: string };
+      state.assistantQuestions.push({ question: payload.question, clauseId: payload.clause_id ?? null });
+      const message = {
+        id: `msg-e2e-${state.assistantQuestions.length}`,
+        contract_id: 'contract-e2e',
+        role: 'assistant',
+        content: 'It renews every year unless you send a written notice [S1].',
+        citations: [{
+          source_id: 'S1',
+          kind: 'clause',
+          label: 'clause:clause-e2e-risky',
+          quote: RISKY_CLAUSE.original_text,
+          source_url: null,
+          verified_at: null,
+        }],
+        grounded: true,
+        created_at: '2026-11-16T10:00:00.000Z',
+      };
+      return route.fulfill({
+        status: 200,
+        contentType: 'text/event-stream',
+        body: [
+          `event: token
+data: ${JSON.stringify({ text: 'It renews every year ' })}
+
+`,
+          `event: token
+data: ${JSON.stringify({ text: 'unless you send a written notice [S1].' })}
+
+`,
+          `event: done
+data: ${JSON.stringify(message)}
+
+`,
+        ].join(''),
+      });
+    }
+    if (path === '/api/legal/updates' && method === 'GET') {
+      return json([{
+        id: 'upd-e2e',
+        source_id: 'co-ley-820-2003',
+        tema: 'arriendo',
+        kind: 'norm_change',
+        title: 'Ley 820 de 2003 (Gestor Normativo)',
+        source_url: 'https://example.test/ley-820',
+        detected_at: '2026-11-10T12:00:00.000Z',
+      }]);
     }
     return json({ code: 'NotFound', message_key: 'errors.api_error' }, 404);
   });
