@@ -167,6 +167,7 @@
   "assistant.source.fact": "Dato del contrato",
   "assistant.source.legal": "Ley",
   "assistant.source.update": "Novedad legal reciente",
+  "assistant.source.news": "Noticia (no oficial)",
   "assistant.verified_on": "Verificado el {{date}}",
   "assistant.open_source": "Abrir fuente",
   "assistant.suggested.what_to_do": "¿Qué debo hacer primero?",

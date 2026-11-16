@@ -6,7 +6,7 @@ const EVENT_STREAM = 'text/event-stream';
 
 const citationSchema = z.object({
   source_id: z.string(),
-  kind: z.enum(['clause', 'fact', 'legal', 'update']),
+  kind: z.enum(['clause', 'fact', 'legal', 'update', 'news']),
   label: z.string(),
   quote: z.string(),
   source_url: z.string().nullable(),
