@@ -7,29 +7,30 @@ export type LegalUpdatesState =
   | { status: 'ready'; updates: LegalUpdate[] }
   | { status: 'error'; errorKey: string };
 
+const LOADING: LegalUpdatesState = { status: 'loading' };
+
 /** Recent legal updates, optionally narrowed to one topic. Refetches when the topic changes. */
 export function useLegalUpdates(token: string | null, tema?: string): LegalUpdatesState {
-  const [state, setState] = useState<LegalUpdatesState>({ status: 'loading' });
+  const requestKey = `${token ?? ''}|${tema ?? ''}`;
+  const [settled, setSettled] = useState<{ key: string; state: LegalUpdatesState } | null>(null);
 
   useEffect(() => {
     if (!token) return;
     let cancelled = false;
-    setState({ status: 'loading' });
     listLegalUpdates(token, tema)
       .then((updates) => {
-        if (!cancelled) setState({ status: 'ready', updates });
+        if (!cancelled) setSettled({ key: requestKey, state: { status: 'ready', updates } });
       })
       .catch((error: unknown) => {
         if (cancelled) return;
-        setState({
-          status: 'error',
-          errorKey: error instanceof ContractApiError ? error.messageKey : 'errors.api_error',
-        });
+        const errorKey = error instanceof ContractApiError ? error.messageKey : 'errors.api_error';
+        setSettled({ key: requestKey, state: { status: 'error', errorKey } });
       });
     return () => {
       cancelled = true;
     };
-  }, [token, tema]);
+  }, [token, tema, requestKey]);
 
-  return state;
+  // A result that belongs to another topic is stale: show loading until the new one lands.
+  return settled?.key === requestKey ? settled.state : LOADING;
 }

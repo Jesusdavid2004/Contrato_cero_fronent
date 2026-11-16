@@ -27,9 +27,10 @@ export function ClauseCard({
   const level = riskLevelOf(clause.risk_level);
   const articleRef = useRef<HTMLElement | null>(null);
 
+  const isOpen = open || highlighted;
+
   useEffect(() => {
     if (!highlighted) return;
-    setOpen(true);
     articleRef.current?.scrollIntoView?.({ block: 'center', behavior: shouldReduceMotion ? 'auto' : 'smooth' });
   }, [highlighted, shouldReduceMotion]);
 
@@ -43,7 +44,7 @@ export function ClauseCard({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
+        aria-expanded={isOpen}
         className="flex w-full items-start gap-3 p-5 text-left"
       >
         <span className="mt-0.5 shrink-0 text-[var(--color-text-muted)]">
@@ -64,12 +65,12 @@ export function ClauseCard({
         </span>
         <ChevronDown
           aria-hidden="true"
-          className={`mt-1 h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className={`mt-1 h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
         />
       </button>
 
       <AnimatePresence initial={false}>
-        {open && (
+        {isOpen && (
           <motion.div
             initial={shouldReduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
             animate={shouldReduceMotion ? { opacity: 1 } : { height: 'auto', opacity: 1 }}

@@ -39,7 +39,10 @@ function optimisticUserMessage(contractId: string, question: string): AssistantM
   };
 }
 
-/** Conversation state for one contract. Components render it; this hook owns the network. */
+/**
+ * Conversation state for one contract. Components render it; this hook owns the network.
+ * Mount it with `key={contractId}` so a different contract starts from a clean state.
+ */
 export function useAssistantChat(contractId: string, token: string | null): AssistantChat {
   const [messages, setMessages] = useState<AssistantMessage[]>([]);
   const [draft, setDraft] = useState('');
@@ -52,8 +55,6 @@ export function useAssistantChat(contractId: string, token: string | null): Assi
   useEffect(() => {
     if (!token) return;
     let cancelled = false;
-    setStatus('loading_history');
-    setHistoryFailed(false);
     listAssistantMessages(contractId, token)
       .then((history) => {
         if (!cancelled) setMessages(history);
@@ -105,7 +106,11 @@ export function useAssistantChat(contractId: string, token: string | null): Assi
     }
   }, [contractId, token]);
 
-  const reloadHistory = useCallback(() => setReloadCounter((count) => count + 1), []);
+  const reloadHistory = useCallback(() => {
+    setStatus('loading_history');
+    setHistoryFailed(false);
+    setReloadCounter((count) => count + 1);
+  }, []);
 
   return { messages, draft, status, errorKey, historyFailed, send, clear, reloadHistory };
 }

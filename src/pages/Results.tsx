@@ -232,7 +232,7 @@ export function Results() {
         ))}
       </section>
 
-      <AssistantPanel contractId={data.id} token={token} />
+      <AssistantPanel key={data.id} contractId={data.id} token={token} />
 
       {flaggedClauses.length > 0 && !letterContent && (
         <div className="flex justify-center pt-1">
