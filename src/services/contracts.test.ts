@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   ContractApiError,
   getErrorKey,
@@ -7,6 +7,7 @@ import {
   parseContractSummary,
   parseObjectionLetter,
   parseStatus,
+  uploadAndAnalyzeContract,
 } from './contracts';
 
 /**
@@ -155,5 +156,36 @@ describe('legacy contract validators (characterization)', () => {
     );
     expect(parsed.clauses[0].legal_basis[0].tema).toBe('arriendo');
     expect(parsed.clauses[0].legal_basis[1].sourceUrl).toBeUndefined();
+  });
+});
+
+describe('uploadAndAnalyzeContract request', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('sends the contract type and the matching user role with the file', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('{}', { status: 500 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(
+      uploadAndAnalyzeContract(new File(['x'], 'lease.pdf'), 'es', 'token-1', undefined, 'EMPLOYMENT'),
+    ).rejects.toBeInstanceOf(ContractApiError);
+
+    const body = fetchMock.mock.calls[0][1].body as FormData;
+    expect(body.get('contract_type')).toBe('EMPLOYMENT');
+    expect(body.get('user_role')).toBe('employee');
+    expect(body.get('locale')).toBe('es');
+  });
+
+  it('defaults to a housing lease analyzed from the tenant side', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response('{}', { status: 500 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(uploadAndAnalyzeContract(new File(['x'], 'lease.pdf'), 'en', 'token-1')).rejects.toBeInstanceOf(ContractApiError);
+
+    const body = fetchMock.mock.calls[0][1].body as FormData;
+    expect(body.get('contract_type')).toBe('LEASE');
+    expect(body.get('user_role')).toBe('tenant');
   });
 });

@@ -241,5 +241,12 @@
   "errors.legal_source_unavailable": "A legal source is temporarily unavailable.",
   "assistant.dictate": "Dictate your question",
   "assistant.ask_about_clause_button": "Ask the assistant about this clause",
-  "assistant.ask_about_clause": "Explain clause {{position}} to me and tell me what I should do about it."
+  "assistant.ask_about_clause": "Explain clause {{position}} to me and tell me what I should do about it.",
+  "home.contract_type_label": "Contract type",
+  "home.contract_type.LEASE": "Housing lease (Colombia)",
+  "home.contract_type.SERVICE": "Services",
+  "home.contract_type.EMPLOYMENT": "Employment",
+  "home.contract_type.OTHER": "Other",
+  "home.contract_type_limited": "Full analysis currently covers housing leases in Colombia only. Other types are not analyzed yet.",
+  "errors.out_of_coverage": "This contract type is not covered yet. Full analysis currently covers housing leases in Colombia."
 }

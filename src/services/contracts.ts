@@ -173,15 +173,29 @@ function wait(milliseconds: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, milliseconds));
 }
 
+export const CONTRACT_TYPES = ['LEASE', 'SERVICE', 'EMPLOYMENT', 'OTHER'] as const;
+export type ContractType = (typeof CONTRACT_TYPES)[number];
+
+/** The party the user is assumed to be for each contract type (sent so the analysis takes their side). */
+const USER_ROLE_BY_CONTRACT_TYPE: Record<ContractType, string> = {
+  LEASE: 'tenant',
+  SERVICE: 'consumer',
+  EMPLOYMENT: 'employee',
+  OTHER: 'other',
+};
+
 export async function uploadAndAnalyzeContract(
   file: File,
   locale: string,
   token: string,
   onStage?: (stage: string) => void,
+  contractType: ContractType = 'LEASE',
 ) {
   const formData = new FormData();
   formData.append('contract', file);
   formData.append('locale', locale);
+  formData.append('contract_type', contractType);
+  formData.append('user_role', USER_ROLE_BY_CONTRACT_TYPE[contractType]);
 
   const upload = uploadAcceptedSchema.safeParse(
     await requestJson(`${API_URL}/api/contracts`, token, {

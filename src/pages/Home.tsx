@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { FileSearch, FileUp, Globe, Info, PenLine, ShieldCheck, Sparkles } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { ContractApiError, uploadAndAnalyzeContract } from '../services/contracts';
+import { CONTRACT_TYPES, ContractApiError, uploadAndAnalyzeContract } from '../services/contracts';
+import type { ContractType } from '../services/contracts';
 import { preHashFile } from '../lib/fileHash';
 import { FileDropzone } from '../components/FileDropzone';
 
@@ -28,6 +29,7 @@ export function Home() {
   const [uploadStage, setUploadStage] = useState<string | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [externalAi, setExternalAi] = useState(false);
+  const [contractType, setContractType] = useState<ContractType>('LEASE');
 
   useEffect(() => {
     let cancelled = false;
@@ -59,6 +61,7 @@ export function Home() {
         i18n.language.substring(0, 2),
         token,
         (stage) => setUploadStage(stage),
+        contractType,
       );
       navigate('/results', { state: { contractData: data } });
     } catch (err: unknown) {
@@ -118,6 +121,25 @@ export function Home() {
         transition={{ duration: 0.3, delay: 0.08 }}
         className="floating-panel p-4! sm:p-5!"
       >
+        <div className="mb-4 px-2">
+          <label htmlFor="contract-type" className="block text-[13px] font-semibold">
+            {t('home.contract_type_label')}
+          </label>
+          <select
+            id="contract-type"
+            value={contractType}
+            disabled={isUploading}
+            onChange={(event) => setContractType(event.target.value as ContractType)}
+            className="mt-1.5 w-full rounded-[12px] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-[14px] sm:w-auto"
+          >
+            {CONTRACT_TYPES.map((type) => (
+              <option key={type} value={type}>{t(`home.contract_type.${type}`)}</option>
+            ))}
+          </select>
+          {contractType !== 'LEASE' && (
+            <p className="mt-2 text-[12px] text-[var(--color-text-muted)]">{t('home.contract_type_limited')}</p>
+          )}
+        </div>
         <FileDropzone isUploading={isUploading} stage={uploadStage} onFile={(f) => void uploadFile(f)} />
         {uploadError && (
           <p role="alert" className="px-2 pb-1 pt-3 text-[13px] font-medium text-[var(--color-risk-high-text)]">

@@ -241,5 +241,12 @@
   "errors.legal_source_unavailable": "Una fuente legal no está disponible por ahora.",
   "assistant.dictate": "Dictar tu pregunta",
   "assistant.ask_about_clause_button": "Preguntar al asistente sobre esta cláusula",
-  "assistant.ask_about_clause": "Explícame la cláusula {{position}} y dime qué debo hacer al respecto."
+  "assistant.ask_about_clause": "Explícame la cláusula {{position}} y dime qué debo hacer al respecto.",
+  "home.contract_type_label": "Tipo de contrato",
+  "home.contract_type.LEASE": "Arrendamiento de vivienda (Colombia)",
+  "home.contract_type.SERVICE": "Servicios",
+  "home.contract_type.EMPLOYMENT": "Laboral",
+  "home.contract_type.OTHER": "Otro",
+  "home.contract_type_limited": "El análisis completo cubre por ahora solo arrendamientos de vivienda en Colombia. Los demás tipos aún no se analizan.",
+  "errors.out_of_coverage": "Este tipo de contrato aún no está cubierto. El análisis completo cubre por ahora arrendamientos de vivienda en Colombia."
 }
